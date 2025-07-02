@@ -3,8 +3,8 @@ services:
     name: arqueologia-avatar-app
     env: python
     plan: free
-    # Adicione o comando python3 -m pip install -r requirements.txt aqui
-    buildCommand: python3 -m pip install -r requirements.txt
+    # Altere o buildCommand para executar o script build.sh
+    buildCommand: bash ./build.sh
     startCommand: gunicorn --bind 0.0.0.0:$PORT src.main:app
     envVars:
       - key: PYTHON_VERSION
@@ -25,4 +25,3 @@ services:
         generateValue: true
       - key: CORS_ORIGINS
         value: "*"
- 
