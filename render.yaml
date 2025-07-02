@@ -4,13 +4,12 @@ services:
     runtime: python
     plan: free
     branch: main
-    # O comando de build agora instala as dependências diretamente.
-    # Isso garante que ele sempre execute a partir do diretório raiz correto.
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn --bind 0.0.0.0:$PORT src.main:app
+    startCommand: gunicorn src.main:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      # Todas as chaves devem ser cadastradas como 'secrets' no painel do Render
       - key: GEMINI_API_KEY
         fromSecret: true
       - key: SUPABASE_URL
@@ -19,14 +18,14 @@ services:
         fromSecret: true
       - key: SUPABASE_SERVICE_ROLE_KEY
         fromSecret: true
+      # Alterado para 'fromSecret' para usar seu banco de dados externo do Supabase
       - key: DATABASE_URL
-        fromDatabase:
-          name: sua-base-de-dados # <-- SUBSTITUA PELO NOME REAL DO SEU BANCO DE DADOS
-          property: connectionString
+        fromSecret: true
       - key: FLASK_ENV
         value: production
+      # É uma boa prática definir a SECRET_KEY como um segredo também
       - key: SECRET_KEY
-        generateValue: true
+        fromSecret: true
       - key: CORS_ORIGINS
         value: "*"
 
