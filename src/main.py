@@ -1,34 +1,31 @@
 import os
-import sys
-# DON'T CHANGE THIS !!!
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
-from src.models.user import db
-from src.routes.user import user_bp
-from src.routes.analysis import analysis_bp
+# CORREÇÃO: As importações agora são relativas ao diretório 'src'
+from models.user import db
+from routes.user import user_bp
+from routes.analysis import analysis_bp
 
-# Load environment variables
+# Carrega as variáveis de ambiente
 load_dotenv()
 
-app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
+# O caminho para a pasta 'static' é ajustado para funcionar corretamente
+app = Flask(__name__, static_folder='static')
 
-# Configure CORS
+# Configura o CORS
 CORS(app, origins=os.getenv('CORS_ORIGINS', '*'))
 
-# App configuration
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'asdf#FGSgvasgf$5$WGT')
+# Configuração da aplicação
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'a-default-secret-key-that-should-be-changed')
 
-# Register blueprints
+# Registra os blueprints
 app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(analysis_bp, url_prefix='/api')
 
-# Database configuration - only initialize if DATABASE_URL is properly configured
+# Configuração do banco de dados
 database_url = os.getenv('DATABASE_URL')
-if database_url and database_url.startswith('postgresql') and 'your-db-password' not in database_url:
-    # Use PostgreSQL (Supabase) only if properly configured
+if database_url:
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
@@ -36,13 +33,11 @@ if database_url and database_url.startswith('postgresql') and 'your-db-password'
     with app.app_context():
         try:
             db.create_all()
-            print("Database tables created successfully!")
+            print("Tabelas do banco de dados verificadas/criadas com sucesso!")
         except Exception as e:
-            print(f"Database connection failed: {e}")
-            print("Running without database functionality...")
+            print(f"Falha na conexão com o banco de dados: {e}")
 else:
-    # Run without database for testing
-    print("Running in test mode without database...")
+    print("DATABASE_URL não encontrada. Executando sem funcionalidades de banco de dados.")
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -53,5 +48,4 @@ def serve(path):
         return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
-
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)), debug=True)
