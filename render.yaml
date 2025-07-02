@@ -3,25 +3,10 @@ services:
     name: arqueologia-avatar-app
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
+    # Altere esta linha para o novo buildCommand
+    buildCommand: ./build.sh
     startCommand: gunicorn --bind 0.0.0.0:$PORT src.main:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
-      - key: GEMINI_API_KEY
-        value: AIzaSyBtLYVXxG61tu0CZ4uoLcO8pTWZuGteUFc
-      - key: SUPABASE_URL
-        value: https://albyamqjdopihijsderu.supabase.co
-      - key: SUPABASE_ANON_KEY
-        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsYnlhbXFqZG9waWhpanNkZXJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE0MTgzMTYsImV4cCI6MjA2Njk5NDMxNn0.n0fjjyDF7LZYa6MD2ZZ5tUVjEieNDtb_rbvfjNHS_Rg
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFsYnlhbXFqZG9waWhpanNkZXJ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTQxODMxNiwiZXhwIjoyMDY2OTk0MzE2fQ.muvh9Xxvb2e30d4fwiO8m2cL5x5KI5-VHO0bNd9F4hg
-      - key: DATABASE_URL
-        sync: false
-      - key: FLASK_ENV
-        value: production
-      - key: SECRET_KEY
-        generateValue: true
-      - key: CORS_ORIGINS
-        value: "*"
-
+      # ... suas outras variáveis de ambiente ...
