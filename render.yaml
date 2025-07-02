@@ -7,7 +7,7 @@ services:
     buildCommand: pip install -r requirements.txt
     # CORREÇÃO: Este comando garante que a execução comece dentro da pasta 'src',
     # resolvendo o problema de importação de módulos de forma definitiva.
-    startCommand: cd src && gunicorn main:app
+    startCommand: gunicorn main:app --chdir src
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -28,4 +28,3 @@ services:
         fromSecret: true
       - key: CORS_ORIGINS
         value: "*"
-
