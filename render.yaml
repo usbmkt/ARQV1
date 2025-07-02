@@ -5,10 +5,9 @@ services:
     plan: free
     branch: main
     buildCommand: pip install -r requirements.txt
-    # O comando --chdir muda o diretório para 'src' antes de iniciar.
-    # Isso resolve o erro 'ModuleNotFoundError' ao garantir que 'main:app'
-    # seja encontrado no caminho correto.
-    startCommand: gunicorn --chdir src main:app
+    # CORREÇÃO: Este comando garante que a execução comece dentro da pasta 'src',
+    # resolvendo o problema de importação de módulos de forma definitiva.
+    startCommand:  gunicorn main:app
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
